@@ -67,11 +67,15 @@ class SwiggerLoggingInterceptor constructor(
     private var swaggerDocCache: SwaggerDocCache? = null
 
     private fun getSwaggerDocCache(): SwaggerDocCache? {
-        return swaggerDocCache ?: contextProvider.invoke()?.let {
-            SwaggerDocCache(it, swaggerDocUrl).also { cache ->
-                swaggerDocCache = cache
-            }
+        if (swaggerDocCache != null) return swaggerDocCache
+
+        // 即使 context 为 null，也创建一个仅内存缓存的实例
+        val context = contextProvider.invoke()
+        swaggerDocCache = SwaggerDocCache(context, swaggerDocUrl).also {
+            // 首次访问时触发后台加载（如果有网络权限）
+            it.ensureFresh()
         }
+        return swaggerDocCache
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -230,7 +234,7 @@ class SwiggerLoggingInterceptor constructor(
 // 🔒 私有缓存管理器：内存 + 文件 + TTL + 后台刷新
 // =============================================
 private class SwaggerDocCache(
-    val context: Context,
+    val context: Context?,
     val swaggerDocUrl: String,
     val ttlHours: Int = 24
 ) {
@@ -250,10 +254,9 @@ private class SwaggerDocCache(
     private val gson = Gson()
 
     // ✅ 安全：每次调用时才访问 context.cacheDir
-    private fun getCacheFile(): File {
-        return File(context.cacheDir, CACHE_FILE_NAME)
+    private fun getCacheFile(): File? {
+        return context?.let { File(it.cacheDir, CACHE_FILE_NAME) }
     }
-
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val isRefreshing = java.util.concurrent.atomic.AtomicBoolean(false)
@@ -290,7 +293,7 @@ private class SwaggerDocCache(
 
     private fun readFromFile(): Pair<SwaggerDoc, Long>? {
         return try {
-            val cacheFile = getCacheFile() // ← 修改这里
+            val cacheFile = getCacheFile() ?: return null // ← 无 Context 则无文件缓存
             if (!cacheFile.exists()) return null
             val json = cacheFile.readText(Charsets.UTF_8)
             if (json.isBlank()) {
@@ -308,7 +311,7 @@ private class SwaggerDocCache(
             wrapper.swaggerDoc to wrapper.timestamp
         } catch (e: Exception) {
             Log.w(tag, "Failed to parse cache file, deleting it", e)
-            getCacheFile().delete() // ← 修改这里
+            getCacheFile()?.delete() // ← 修改这里
             null
         }
     }
@@ -347,19 +350,29 @@ private class SwaggerDocCache(
                         newDoc = gson.fromJson(bodyString, SwaggerDoc::class.java)
                         if (newDoc != null) {
                             val now = System.currentTimeMillis()
-                            val wrapper = SwaggerCacheWrapper(timestamp = now, swaggerDoc = newDoc)
+                            // 更新内存缓存（始终执行）
+                            memoryCache = newDoc to now
 
-                            // 使用临时文件保证原子写入
-                            val tempFile = File(context.cacheDir, "${CACHE_FILE_NAME}.tmp")
-                            tempFile.writeText(gson.toJson(wrapper), Charsets.UTF_8)
-                            // 注意：renameTo 在部分 Android 设备上可能失败（跨分区），但 cacheDir 内通常安全
-                            if (tempFile.renameTo(getCacheFile())) {
-                                memoryCache = newDoc to now
-                                success = true
-                                Log.d(tag, "Successfully refreshed and cached Swagger doc")
-                            } else {
-                                Log.e(tag, "Failed to rename temp cache file")
-                                tempFile.delete() // 清理残留
+                            // 仅当有 Context 时才尝试写入磁盘
+                            context?.let { ctx ->
+                                val wrapper =
+                                    SwaggerCacheWrapper(timestamp = now, swaggerDoc = newDoc)
+                                val tempFile = File(ctx.cacheDir, "${CACHE_FILE_NAME}.tmp")
+                                try {
+                                    tempFile.writeText(gson.toJson(wrapper), Charsets.UTF_8)
+                                    if (tempFile.renameTo(getCacheFile()!!)) {
+                                        Log.d(
+                                            tag,
+                                            "Successfully refreshed and cached Swagger doc to disk"
+                                        )
+                                    } else {
+                                        Log.e(tag, "Failed to rename temp cache file")
+                                        tempFile.delete()
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e(tag, "Failed to write cache file", e)
+                                    tempFile.delete()
+                                }
                             }
                         } else {
                             Log.w(tag, "Parsed SwaggerDoc is null")

@@ -39,9 +39,9 @@ android {
 }
 
 dependencies {
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("com.squareup.okhttp3:okhttp:5.3.2")
+    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -55,7 +55,7 @@ afterEvaluate {
                 // 坐标配置
                 groupId = "com.github.cdAhmad"
                 artifactId = "swagger-interceptor"
-                version = "1.0.3"
+                version = "1.0.4"
 
                 // 核心：从 Android release 组件导入
                 // KTS 语法：components["release"]
