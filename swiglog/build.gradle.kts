@@ -31,14 +31,12 @@ publishing {
             // ✅ 修正：使用 "java" 而不是 "release"
             from(components["java"])   // ←←← 关键修复！
 
-            // 推荐：附带源码和文档
-            artifact(tasks.named("sourcesJar"))
-            artifact(tasks.named("javadocJar"))
+
         }
     }
     repositories {
         // 发布到本地 Maven (~/.m2/repository)
-        mavenLocal()
+//        mavenLocal()
 
         // 如果发布到私有远程仓库
         /*
