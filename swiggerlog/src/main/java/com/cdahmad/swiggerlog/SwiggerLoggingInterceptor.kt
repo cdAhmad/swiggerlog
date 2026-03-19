@@ -1,7 +1,6 @@
 package com.cdahmad.swiggerlog
 
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
