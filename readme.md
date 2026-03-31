@@ -70,6 +70,8 @@ object LogHelper {
 }
 ```
 
+**注意**：如果项目中有其他buildtype（如staging、beta等），可以复用Release版本的实现，只需在对应的目录结构下创建相同的LogHelper文件即可。例如，为staging环境创建`app/src/staging/java/LogHelper.kt`，内容与Release版本相同。
+
 **使用LogHelper**
 ```
 val okHttpClient = OkHttpClient.Builder()

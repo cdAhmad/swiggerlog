@@ -63,6 +63,8 @@ object LogHelper {
 }
 ```
 
+**注意**：如果项目中有其他buildtype（如staging、beta等），可以复用Release版本的实现，只需在对应的目录结构下创建相同的LogHelper文件即可。例如，为staging环境创建`app/src/staging/java/LogHelper.kt`，内容与Release版本相同。
+
 ### 使用LogHelper
 ```kotlin
 val okHttpClient = OkHttpClient.Builder()
@@ -75,6 +77,48 @@ val okHttpClient = OkHttpClient.Builder()
             log = { level, tag, msg -> Log.d(tag, msg) }
         )?.let { addInterceptor(it) }
     }
+    .build()
+```
+
+### 2. 创建基本拦截器
+```kotlin
+val swaggerInterceptor = SwiggerLoggingInterceptor(
+    baseUrl = "https://api.example.com",
+    swaggerDocUrl = "/v2/api-docs",
+    deobfus = true,  // 启用JSON反混淆
+    filter = true,   // 启用日志过滤
+    format = true    // 启用日志格式化
+)
+```
+
+### 3. 自定义配置
+```kotlin
+val customInterceptor = SwiggerLoggingInterceptor(
+    baseUrl = "https://api.example.com",
+    swaggerDocUrl = "/swagger.json",
+    deobfus = true,
+    filter = true,
+    format = true,
+    cacheFile = { File(context.cacheDir, "swagger.json") },  // 自定义缓存文件路径
+    log = { level, tag, msg ->  // 自定义日志记录
+        when (level) {
+            0 -> Log.d(tag, msg)  // Debug级别
+            1 -> Log.e(tag, msg)  // Error级别
+        }
+    }
+)
+```
+
+### 4. 使用扩展函数
+```kotlin
+val okHttpClient = OkHttpClient.Builder()
+    .addSwiggerLoggingInterceptor(
+        filter = true,
+        format = true,
+        url = "https://api.example.com",
+        cacheFile = { File(context.cacheDir, "swagger.json") },
+        log = { level, tag, msg -> Log.d(tag, msg) }
+    )
     .build()
 ```
 
