@@ -1,36 +1,27 @@
-# SwaggerLog
+---
+name: "swaggerlog-usage"
+description: "提供SwaggerLog库的使用指南和示例代码，包括安装、基本用法、自定义配置和环境区分。当用户询问SwaggerLog的使用方法或需要示例代码时调用。"
+---
 
-一个功能强大的Android开发库，提供OkHttp日志拦截器，简化网络调试。
+# SwaggerLog 使用指南
 
-## 📦 模块介绍
+SwaggerLog是一个功能强大的Android OkHttp日志拦截器库，支持Swagger文档集成和JSON反混淆，简化网络调试过程。
 
-### 1. swaglog - OkHttp日志拦截器
+## 安装方式
 
-专为Android开发设计的OkHttp日志拦截器，支持Swagger文档集成和JSON反混淆，让网络调试更高效。
-
-#### ✨ 核心功能
-- 📝 **格式化日志**：请求和响应日志格式化输出，便于阅读
-- 🔍 **JSON反混淆**：自动反混淆JSON数据，还原真实数据结构
-- 📚 **Swagger集成**：自动获取并缓存Swagger文档，结合文档展示请求信息
-- 💾 **文档缓存**：本地缓存Swagger文档，减少网络请求
-- 📁 **大文件支持**：大文件日志自动分段处理，避免内存溢出
-- 🎨 **自定义日志**：支持自定义日志记录方式，适配各种日志框架
-
-#### 📥 安装
-
-**推荐方式：仅在Debug环境使用**
+### 推荐：仅Debug环境使用
 ```kotlin
 debugImplementation("com.github.cdAhmad:swagger-interceptor:1.1.0")
 ```
 
-**全局使用（不推荐）**
+### 全局使用（不推荐）
 ```kotlin
 implementation("com.github.cdAhmad:swagger-interceptor:1.1.0")
 ```
 
-#### 🚀 使用示例
+## 基本用法
 
-##### 1. 基本用法
+### 1. 创建基本拦截器
 ```kotlin
 val swaggerInterceptor = SwiggerLoggingInterceptor(
     baseUrl = "https://api.example.com",
@@ -41,7 +32,7 @@ val swaggerInterceptor = SwiggerLoggingInterceptor(
 )
 ```
 
-##### 2. 自定义配置
+### 2. 自定义配置
 ```kotlin
 val customInterceptor = SwiggerLoggingInterceptor(
     baseUrl = "https://api.example.com",
@@ -59,7 +50,7 @@ val customInterceptor = SwiggerLoggingInterceptor(
 )
 ```
 
-##### 3. 使用扩展函数
+### 3. 使用扩展函数
 ```kotlin
 val okHttpClient = OkHttpClient.Builder()
     .addSwiggerLoggingInterceptor(
@@ -72,11 +63,10 @@ val okHttpClient = OkHttpClient.Builder()
     .build()
 ```
 
-##### 4. 区分Debug和Release环境（推荐）
+## 区分Debug和Release环境（推荐）
 
-**创建LogHelper**
-
-在`app/src/debug/kotlin/`目录下创建Debug版本的LogHelper：
+### 创建Debug版本LogHelper
+在`app/src/debug/kotlin/`目录下：
 ```kotlin
 object LogHelper {
     fun getInterceptor(
@@ -98,7 +88,8 @@ object LogHelper {
 }
 ```
 
-在`app/src/release/java/`目录下创建Release版本的LogHelper：
+### 创建Release版本LogHelper
+在`app/src/release/java/`目录下：
 ```kotlin
 object LogHelper {
     fun getInterceptor(
@@ -112,7 +103,7 @@ object LogHelper {
 }
 ```
 
-**使用LogHelper**
+### 使用LogHelper
 ```kotlin
 val okHttpClient = OkHttpClient.Builder()
     .apply {
@@ -127,45 +118,18 @@ val okHttpClient = OkHttpClient.Builder()
     .build()
 ```
 
-## 📁 项目结构
+## 核心功能
 
-```
-SwaggerLog/
-├── swaglog/                  # OkHttp日志拦截器
-│   ├── src/main/java/com/cdahmad/swiggerlog/
-│   │   └── SwiggerLoggingInterceptor.kt
-├── app/                      # 示例应用
-│   ├── src/
-│   │   ├── debug/kotlin/
-│   │   │   └── LogHelper.kt  # Debug环境日志工具
-│   │   ├── release/java/
-│   │   │   └── LogHelper.kt  # Release环境日志工具
-├── build.gradle.kts          # 项目构建配置
-├── settings.gradle.kts       # 模块配置
-└── jitpack.yml               # JitPack发布配置
-```
+- 📝 **格式化日志**：请求和响应日志格式化输出，便于阅读
+- 🔍 **JSON反混淆**：自动反混淆JSON数据，还原真实数据结构
+- 📚 **Swagger集成**：自动获取并缓存Swagger文档，结合文档展示请求信息
+- 💾 **文档缓存**：本地缓存Swagger文档，减少网络请求
+- 📁 **大文件支持**：大文件日志自动分段处理，避免内存溢出
+- 🎨 **自定义日志**：支持自定义日志记录方式，适配各种日志框架
 
-## 🛠️ 技术栈
+## 注意事项
 
-- **Kotlin** - 主要开发语言
-- **OkHttp** - 强大的网络请求库
-- **Gson** - 高效的JSON解析库
-- **Coroutines** - 优雅的异步编程
-
-## 📄 许可证
-
-[MIT License](LICENSE)
-
-## 🤝 贡献
-
-欢迎提交Issue和Pull Request来帮助改进这个项目！
-
-## 📧 联系方式
-
-如有问题或建议，可以通过以下方式联系：
-- GitHub Issues: [提交问题](https://github.com/cdAhmad/SwaggerLog/issues)
-- GitHub: [cdAhmad](https://github.com/cdAhmad)
-
----
-
-**SwaggerLog** - 让Android开发更高效！ 🚀
+1. 建议仅在Debug环境下使用，避免在Release版本中暴露敏感信息
+2. 确保正确配置Swagger文档URL，否则Swagger集成功能将无法正常工作
+3. 对于大型项目，建议使用LogHelper方式管理拦截器，便于统一控制
+4. 首次使用时，拦截器会自动下载Swagger文档，可能需要网络权限

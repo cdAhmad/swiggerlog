@@ -36,27 +36,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.runner)
     androidTestImplementation(libs.espresso.core)
-//    // Specify the Compose BOM with a version definition
-//    val composeBom = platform("androidx.compose:compose-bom:2026.03.00")
-//    implementation(composeBom)
-////    testImplementation(composeBom)
-//    androidTestImplementation(composeBom)
-//
-//    // Specify Compose library dependencies without a version definition
-//    implementation("androidx.compose.ui:ui")
-//    implementation("androidx.compose.ui:ui-graphics")
-//    implementation("androidx.compose.ui:ui-tooling-preview")
-//    implementation("androidx.compose.material3:material3")
-//    implementation("androidx.compose.material:material-icons-extended")
-//    // ..
-//    // 调试和预览依赖
-//    debugImplementation("androidx.compose.ui:ui-tooling")
-////    debugImplementation("androidx.compose.ui:ui-tooling-preview")
-////    debugImplementation("androidx.compose.ui:ui-test-manifest")
-//    // ..
-//    // 如果需要 ViewModel 集成
-//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
-//    implementation("androidx.activity:activity-compose")
+
     implementation("com.squareup.okhttp3:okhttp:4.12.1")
-    debugImplementation("com.github.cdAhmad:swigger-interceptor:1.0.7.6")
+    debugImplementation("com.github.cdAhmad:swagger-interceptor:1.1.0")
+    debugImplementation(project(":swaglog"))
 }
