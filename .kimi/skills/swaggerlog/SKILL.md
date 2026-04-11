@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    debugImplementation("com.github.cdAhmad:swaggerlog:1.1.2")
+    debugImplementation("com.github.cdAhmad:swaggerlog:1.1.3")
 }
 ```
 
