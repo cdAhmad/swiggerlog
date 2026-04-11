@@ -19,6 +19,7 @@ espressoCoreVersion = "3.0.2"
 appcompatV7 = "28.0.0"
 uiToolingPreview = "1.10.5"
 uiTooling = "1.10.5"
+swaggerlog = "1.1.1"
 
 [libraries]
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
@@ -46,6 +47,6 @@ openapi-generator = { id = "org.openapi.generator", version.ref = "openapiGenera
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-koltin-android = { id ="org.jetbrains.kotlin.android", version.ref = "kotlin" }
+koltin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 

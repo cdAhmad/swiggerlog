@@ -38,6 +38,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation("com.squareup.okhttp3:okhttp:4.12.1")
-    debugImplementation("com.github.cdAhmad:swagger-interceptor:1.1.0")
+    debugImplementation("com.github.cdAhmad:swaggerlog:1.1.1")
     debugImplementation(project(":swaglog"))
 }
