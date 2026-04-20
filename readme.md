@@ -36,6 +36,10 @@ implementation("com.github.cdAhmad:swaggerlog:1.1.3")
 
 在`app/src/debug/kotlin/`目录下创建Debug版本的LogHelper：
 ```kotlin
+import com.cdahmad.swaggerlog.SwaggerLoggingInterceptor
+import okhttp3.Interceptor
+import java.io.File
+
 object LogHelper {
     fun getInterceptor(
         apiUrl: String,
@@ -57,7 +61,10 @@ object LogHelper {
 ```
 
 在`app/src/release/java/`目录下创建Release版本的LogHelper：
+
 ```kotlin
+import okhttp3.Interceptor
+import java.io.File
 object LogHelper {
     fun getInterceptor(
         apiUrl: String,
@@ -74,6 +81,8 @@ object LogHelper {
 
 **使用LogHelper**
 ```
+import okhttp3.Interceptor
+import java.io.File
 val okHttpClient = OkHttpClient.Builder()
     .apply {
         // 仅在Debug环境下添加拦截器
