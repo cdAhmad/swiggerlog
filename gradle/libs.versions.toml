@@ -10,7 +10,7 @@ material = "1.13.0"
 jetbrainsKotlinJvm = "2.0.10"
 androidxComposeBom = "2026.02.01"
 kotlin = "2.0.21"
-swaggerlog = "1.1.3"
+swaggerlog = "1.2.0"
 
 [libraries]
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }

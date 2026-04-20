@@ -20,12 +20,12 @@
 
 **推荐方式：仅在Debug环境使用**
 ```kotlin
-debugImplementation("com.github.cdAhmad:swaggerlog:1.1.3")
+debugImplementation("com.github.cdAhmad:swaggerlog:1.2.0")
 ```
 
 **全局使用（不推荐）**
 ```kotlin
-implementation("com.github.cdAhmad:swaggerlog:1.1.3")
+implementation("com.github.cdAhmad:swaggerlog:1.2.0")
 ```
 
 #### 🚀 使用示例
